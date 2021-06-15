@@ -17,7 +17,6 @@ public class User extends AbstractNamedEntity {
     private Date registered = new Date();
 
     private Set<Role> roles;
-
     private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
 
     public User(Integer id, String name, String email, String password, Role role, Role... roles) {
