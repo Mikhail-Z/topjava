@@ -62,7 +62,7 @@ public class InMemoryMealRepository implements MealRepository {
         return repository.values()
                 .stream()
                 .filter(meal -> meal.getUserId() == currentUserId)
-                .sorted(Comparator.comparing(Meal::getDateTime))
+                .sorted((meal1, meal2) -> meal2.getDateTime().compareTo(meal1.getDateTime()))
                 .collect(Collectors.toList());
     }
 
@@ -71,6 +71,7 @@ public class InMemoryMealRepository implements MealRepository {
         return repository.values()
                 .stream()
                 .filter(meal -> meal.getUserId() == currentUserId && DateTimeUtil.isBetweenHalfOpen(meal.getDate(), startDate, endDate))
+                .sorted((meal1, meal2) -> meal2.getDateTime().compareTo(meal1.getDateTime()))
                 .collect(Collectors.toList());
     }
 }
