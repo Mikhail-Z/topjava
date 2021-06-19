@@ -39,7 +39,7 @@ public class MealService {
         return new ArrayList<>(repository.getBetweenDateBoundaries(startDate, endDate, currentUserId));
     }
 
-    public void update(Meal meal, int currentUserId) {
-        checkNotFoundWithId(repository.save(meal, currentUserId), meal.getId());
+    public void update(Meal meal, int id, int currentUserId) {
+        checkNotFoundWithId(repository.save(meal, currentUserId), id);
     }
 }

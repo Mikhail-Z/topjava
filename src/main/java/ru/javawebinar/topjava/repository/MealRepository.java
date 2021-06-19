@@ -4,19 +4,20 @@ import ru.javawebinar.topjava.model.Meal;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 public interface MealRepository {
     // null if updated meal do not belong to userId
-    Meal save(Meal meal, int currentUserId);
+    Meal save(Meal meal, int userId);
 
     // false if meal do not belong to userId
-    boolean delete(int id, int currentUserId);
+    boolean delete(int id, int userId);
 
     // null if meal do not belong to userId
-    Meal get(int id, int currentUserId);
+    Meal get(int id, int userId);
 
     // ORDERED dateTime desc
-    Collection<Meal> getAll(int currentUserId);
+    List<Meal> getAll(int userId);
 
-    Collection<Meal> getBetweenDateBoundaries(LocalDate startDate, LocalDate endDate, int currentUserId);
+    List<Meal> getBetweenDateBoundaries(LocalDate startDate, LocalDate endDate, int currentUserId);
 }

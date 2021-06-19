@@ -41,7 +41,7 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public Collection<User> getAll() {
+    public List<User> getAll() {
         log.info("getAll");
         return repository.values()
                 .stream()
@@ -55,7 +55,7 @@ public class InMemoryUserRepository implements UserRepository {
         log.info("getByEmail {}", email);
         Optional<User> foundUser = repository.values()
                 .stream()
-                .filter(user -> user.getEmail().equals(email))
+                .filter(user -> user.getEmail().equalsIgnoreCase(email))
                 .findFirst();
 
         return foundUser.orElse(null);
