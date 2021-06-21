@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.time.LocalDateTime.of;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
@@ -32,8 +33,9 @@ public class InMemoryMealRepository implements MealRepository {
 
     {
         MealsUtil.meals.forEach(meal -> save(meal, USER_ID));
-        save(new Meal(LocalDateTime.of(2015, Month.JUNE, 1, 14, 0), "Админ ланч", 510), ADMIN_ID);
-        save(new Meal(LocalDateTime.of(2015, Month.JUNE, 1, 21, 0), "Админ ужин", 1500), ADMIN_ID);
+        save(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак админа", 600), ADMIN_ID);
+        save(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 15, 0), "Обед админа", 1000), ADMIN_ID);
+        save(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 21, 0), "Ужин админа", 900), ADMIN_ID);
     }
 
 
