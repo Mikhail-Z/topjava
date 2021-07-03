@@ -22,6 +22,7 @@ import org.junit.rules.Stopwatch;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertThrows;
@@ -38,16 +39,17 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 public class MealServiceTest {
 
     private static final Logger log = getLogger("result");
-
     private static final StringBuffer results = new StringBuffer();
+    @Autowired
+    private MealService service;
 
     @Rule
     public final Stopwatch stopwatch = new Stopwatch() {
         @Override
         protected void finished(long nanos, Description description) {
-            String result = String.format("\n%s: %d", description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
+            String result = String.format("\n%-30s: %dms", description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
             results.append(result);
-            log.info(result + " ms\n");
+            log.info(result);
         }
     };
 
@@ -55,9 +57,6 @@ public class MealServiceTest {
     public static void showResult() {
         log.info(results.toString());
     }
-
-    @Autowired
-    private MealService service;
 
     @Test
     public void delete() {
