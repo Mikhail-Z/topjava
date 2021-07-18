@@ -1,9 +1,8 @@
 package ru.javawebinar.topjava.repository.datajpa;
 
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Sort;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
@@ -13,7 +12,7 @@ import java.util.List;
 import static ru.javawebinar.topjava.Profiles.DATAJPA;
 
 @Repository
-@ActiveProfiles(DATAJPA)
+@Profile(DATAJPA)
 public class DataJpaMealRepository implements MealRepository {
 
     private final CrudMealRepository crudMealRepository;
@@ -25,21 +24,17 @@ public class DataJpaMealRepository implements MealRepository {
     }
 
     @Override
+    //@Transactional
     public Meal save(Meal meal, int userId) {
         if (!meal.isNew() && get(meal.getId(), userId) == null) {
             return null;
         }
-
         meal.setUser(crudUserRepository.getById(userId));
         return crudMealRepository.save(meal);
     }
 
     @Override
     public boolean delete(int id, int userId) {
-        if (get(id, userId) == null) {
-            return false;
-        }
-
         return crudMealRepository.delete(id, userId) != 0;
     }
 

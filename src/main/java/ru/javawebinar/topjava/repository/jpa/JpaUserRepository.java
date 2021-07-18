@@ -1,8 +1,8 @@
 package ru.javawebinar.topjava.repository.jpa;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
@@ -15,7 +15,7 @@ import static ru.javawebinar.topjava.Profiles.JPA;
 
 @Repository
 @Transactional(readOnly = true)
-@ActiveProfiles(JPA)
+@Profile(JPA)
 public class JpaUserRepository implements UserRepository {
 
 /*
