@@ -22,11 +22,11 @@ public class UserServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String rawUserId = request.getParameter("userId");
-        if (rawUserId.isEmpty()) {
+        if (!rawUserId.isEmpty()) {
             int userId = Integer.parseInt(rawUserId);
             SecurityUtil.setAuthUserId(userId);
         }
 
-        response.sendRedirect("/");
+        response.sendRedirect("meals");
     }
 }
