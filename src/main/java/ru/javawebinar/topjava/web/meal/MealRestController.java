@@ -9,7 +9,6 @@ import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
-import ru.javawebinar.topjava.web.MealServlet;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
@@ -21,10 +20,11 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 @Controller
 public class MealRestController {
+
+    private static final Logger log = LoggerFactory.getLogger(MealRestController.class);
+
     @Autowired
     private MealService service;
-
-    private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
     public List<MealTo > getAll() {
         int userId = SecurityUtil.authUserId();
@@ -35,16 +35,8 @@ public class MealRestController {
 
     public Meal get(int id) {
         int userId = SecurityUtil.authUserId();
-        List<Meal> allMeals = service.getAll(userId);
         log.info("get {}", id);
-        return MealsUtil.filterByPredicate(
-                    allMeals,
-                    SecurityUtil.authUserCaloriesPerDay(),
-                    meal -> meal.getId() == id)
-                .stream()
-                .findFirst()
-                .map(mealTo -> MealsUtil.create(mealTo, userId))
-                .orElse(null);
+        return service.get(id, userId);
     }
 
     public Meal create(Meal meal) {
@@ -54,25 +46,30 @@ public class MealRestController {
         Meal createdMeal = service.create(meal, userId);
         log.info("created {}", createdMeal);
 
-        return get(createdMeal.getId());
+        return createdMeal;
     }
 
-    public Meal update(Meal meal, int id) {
+    public void update(Meal meal, int id) {
         int userId = SecurityUtil.authUserId();
         assureIdConsistent(meal, id);
         log.info("updating {}", meal);
         service.update(meal, userId);
         log.info("updated {}", meal);
-        return get(meal.getId());
     }
 
     public List<MealTo> getBetweenTimeBoundaries(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         int userId = SecurityUtil.authUserId();
+
+        LocalDate resStartDate = startDate == null ? LocalDate.MIN : startDate;
+        LocalTime resStartTime = startTime == null ? LocalTime.MIN : startTime;
+        LocalDate resEndDate = endDate == null ? LocalDate.MIN : endDate;
+        LocalTime resEndTime = endTime == null ? LocalTime.MIN : endTime;
+
         List<Meal> allMeals = service.getAll(userId);
         return MealsUtil.filterByPredicate(
                 allMeals,
                 SecurityUtil.authUserCaloriesPerDay(),
-                meal -> DateTimeUtil.isBetweenHalfOpen(meal.getTime(), startTime, endTime) && DateTimeUtil.isBetween(meal.getDate(), startDate, endDate));
+                meal -> DateTimeUtil.isBetweenHalfOpen(meal.getTime(), resStartTime, resEndTime) && DateTimeUtil.isBetween(meal.getDate(), resStartDate, resEndDate));
     }
 
     public void delete(int id) {

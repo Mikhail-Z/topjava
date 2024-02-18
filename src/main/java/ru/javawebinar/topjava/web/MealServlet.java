@@ -31,8 +31,8 @@ public class MealServlet extends HttpServlet {
 
     @Override
     public void destroy() {
-        super.destroy();
         appCtx.close();
+        super.destroy();
     }
 
     @Override
@@ -77,10 +77,10 @@ public class MealServlet extends HttpServlet {
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
             case "filter":
-                LocalDate startDate = getDate(request, "startDate", LocalDate.MIN);
-                LocalTime startTime = getTime(request, "startTime", LocalTime.MIN);
-                LocalDate endDate = getDate(request, "endDate", LocalDate.MAX);
-                LocalTime endTime = getTime(request, "endTime", LocalTime.MAX);
+                LocalDate startDate = getDate(request, "startDate");
+                LocalTime startTime = getTime(request, "startTime");
+                LocalDate endDate = getDate(request, "endDate");
+                LocalTime endTime = getTime(request, "endTime");
                 log.info("filter");
                 request.setAttribute("meals", mealRestController.getBetweenTimeBoundaries(startDate, startTime, endDate, endTime));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
@@ -99,13 +99,13 @@ public class MealServlet extends HttpServlet {
         return Integer.parseInt(number);
     }
 
-    private LocalDate getDate(HttpServletRequest request, String paramName, LocalDate defaultValue) {
+    private LocalDate getDate(HttpServletRequest request, String paramName) {
         String rawDate = request.getParameter(paramName);
-        return rawDate.isEmpty() ? defaultValue : LocalDate.parse(rawDate);
+        return rawDate.isEmpty() ? null : LocalDate.parse(rawDate);
     }
 
-    public LocalTime getTime(HttpServletRequest request, String paramName, LocalTime defaultValue) {
+    public LocalTime getTime(HttpServletRequest request, String paramName) {
         String rawTime = request.getParameter(paramName);
-        return rawTime.isEmpty() ? defaultValue : LocalTime.parse(rawTime);
+        return rawTime.isEmpty() ? null : LocalTime.parse(rawTime);
     }
 }
