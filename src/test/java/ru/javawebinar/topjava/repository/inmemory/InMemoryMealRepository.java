@@ -3,15 +3,16 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import ru.javawebinar.topjava.MealTestData;
+import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.Util;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -24,16 +25,17 @@ import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 @Repository
-public class InMemoryMealRepository implements MealRepository {
+public class InMemoryMealRepository extends InMemoryBaseRepository<Meal> implements MealRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryMealRepository.class);
 
     // Map  userId -> mealRepository
     private final Map<Integer, InMemoryBaseRepository<Meal>> usersMealsMap = new ConcurrentHashMap<>();
 
     {
-        MealsUtil.meals.forEach(meal -> save(meal, USER_ID));
-        save(new Meal(LocalDateTime.of(2015, Month.JUNE, 1, 14, 0), "Админ ланч", 510), ADMIN_ID);
-        save(new Meal(LocalDateTime.of(2015, Month.JUNE, 1, 21, 0), "Админ ужин", 1500), ADMIN_ID);
+        InMemoryBaseRepository<Meal> userMeals = usersMealsMap.computeIfAbsent(USER_ID, uId -> new InMemoryBaseRepository<>());
+        MealTestData.USER_MEALS.forEach(userMeals::save);
+        InMemoryBaseRepository<Meal> adminMeals = usersMealsMap.computeIfAbsent(ADMIN_ID, uId -> new InMemoryBaseRepository<>());
+        MealTestData.ADMIN_MEALS.forEach(adminMeals::save);
     }
 
 
