@@ -1,7 +1,8 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.Stopwatch;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -14,6 +15,8 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -28,6 +31,42 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 @Ignore
 public class MealServiceTest {
+
+    private static final StringBuilder results = new StringBuilder();
+
+    @AfterClass
+    public static void printResults() {
+        System.out.printf("|%-98s|%n", MealServiceTest.class.getSimpleName());
+        System.out.printf("|%s|%n", String.join("", Collections.nCopies(98, "-")));
+        System.out.println(results);
+    }
+
+    @Rule
+    public final Stopwatch stopWatchRule = new Stopwatch() {
+        private static final String PASSED = "Passed";
+        private static final String FAILED = "Failed";
+        private static final String SKIPPED = "Skipped";
+
+        @Override
+        protected void succeeded(long nanos, Description description) {
+            addInfo(description.getMethodName(), PASSED, nanos);
+        }
+
+        @Override
+        protected void failed(long nanos, Throwable e, Description description) {
+            addInfo(description.getMethodName(), FAILED, nanos);
+        }
+
+        @Override
+        protected void skipped(long nanos, AssumptionViolatedException e, Description description) {
+            addInfo(description.getMethodName(), SKIPPED, nanos);;
+        }
+
+        private void addInfo(String testName, String testResult, long nanos) {
+            results.append(String.format("|%-58s%-20s%-20s|%n", testName, testResult, TimeUnit.NANOSECONDS.toMillis(nanos) + "ms"));
+        }
+    };
+
 
     @Autowired
     private MealService service;

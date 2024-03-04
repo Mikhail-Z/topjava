@@ -9,13 +9,22 @@ public class ValidationUtil {
     private ValidationUtil() {
     }
 
-    public static <T> T checkNotFoundWithId(T object, int id) {
-        checkNotFoundWithId(object != null, id);
+    public static <T> T checkNotFoundWithIdAndUserId(T object, int id, int userId) {
+        checkNotFoundWithIdAndUserId(object != null, id, userId);
         return object;
     }
 
-    public static void checkNotFoundWithId(boolean found, int id) {
-        checkNotFound(found, "id=" + id);
+    public static <T> T checkNotFoundWithId(T object, int id) {
+        checkNotFoundWithIdAndUserId(object != null, id);
+        return object;
+    }
+
+    public static void checkNotFoundWithIdAndUserId(boolean found, int id, int userId) {
+        checkNotFound(found, String.format("id=%d, userId=%d", id, userId));
+    }
+
+    public static void checkNotFoundWithIdAndUserId(boolean found, int id) {
+        checkNotFound(found, String.format("id=%d", id));
     }
 
     public static <T> T checkNotFound(T object, String msg) {

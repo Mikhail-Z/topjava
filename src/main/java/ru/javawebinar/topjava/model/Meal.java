@@ -10,9 +10,17 @@ import java.time.LocalTime;
 
 @NamedQueries({
         @NamedQuery(name = Meal.GET, query = "SELECT m FROM Meal m WHERE m.id=:id AND m.user.id=:user_id"),
-        @NamedQuery(name = Meal.GET_ALL, query = "SELECT m FROM Meal m WHERE m.user.id=:user_id ORDER BY m.dateTime DESC"),
-        @NamedQuery(name = Meal.GET_BETWEEN_BOUNDARIES, query = "SELECT m FROM Meal m WHERE m.user.id=:user_id AND m.dateTime>=:start_dt AND m.dateTime<:end_dt ORDER BY m.dateTime DESC"),
+        @NamedQuery(name = Meal.GET_ALL, query = "SELECT m FROM Meal m WHERE m.user.id=:user_id " +
+                "ORDER BY m.dateTime DESC"),
+        @NamedQuery(name = Meal.GET_BETWEEN_BOUNDARIES, query = "SELECT m FROM Meal m" +
+                " WHERE m.user.id=:user_id AND m.dateTime>=:start_dt AND m.dateTime<:end_dt" +
+                " ORDER BY m.dateTime DESC"),
         @NamedQuery(name = Meal.DELETE, query = "DELETE FROM Meal m WHERE m.id=:id AND m.user.id=:user_id"),
+        @NamedQuery(name = Meal.UPDATE, query = "UPDATE Meal m set " +
+                "m.dateTime = :date_time," +
+                " m.description = :description," +
+                " m.calories = :calories " +
+                "WHERE id = :id AND m.user.id = :user_id")
 })
 @Entity
 @Table(name = "meal", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"})})
@@ -22,18 +30,18 @@ public class Meal extends AbstractBaseEntity {
     public static final String GET_ALL = "Meal.getAll";
     public static final String GET_BETWEEN_BOUNDARIES = "Meal.getBetweenBoundaries";
     public static final String DELETE = "Meal.delete";
+    public static final String UPDATE = "Meal.update";
 
     @Column(name = "date_time", nullable = false)
     @NotNull
     private LocalDateTime dateTime;
 
-    @Column(name = "description", nullable = false, unique = true)
+    @Column(name = "description", nullable = false)
     @NotBlank
     @Size(max = 256)
     private String description;
 
-    @Column(name = "calories", nullable = false, unique = true)
-    @NotNull
+    @Column(name = "calories", nullable = false)
     private int calories;
 
     @ManyToOne(fetch = FetchType.LAZY)

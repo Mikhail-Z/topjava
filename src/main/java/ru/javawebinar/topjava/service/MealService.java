@@ -5,13 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.ValidationUtil;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.DateTimeUtil.atStartOfDayOrMin;
 import static ru.javawebinar.topjava.util.DateTimeUtil.atStartOfNextDayOrMax;
-import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithIdAndUserId;
 
 @Service
 public class MealService {
@@ -23,11 +24,11 @@ public class MealService {
     }
 
     public Meal get(int id, int userId) {
-        return checkNotFoundWithId(repository.get(id, userId), id);
+        return ValidationUtil.checkNotFoundWithIdAndUserId(repository.get(id, userId), id, userId);
     }
 
     public void delete(int id, int userId) {
-        checkNotFoundWithId(repository.delete(id, userId), id);
+        checkNotFoundWithIdAndUserId(repository.delete(id, userId), id, userId);
     }
 
     public List<Meal> getBetweenInclusive(@Nullable LocalDate startDate, @Nullable LocalDate endDate, int userId) {
@@ -40,7 +41,7 @@ public class MealService {
 
     public void update(Meal meal, int userId) {
         Assert.notNull(meal, "meal must not be null");
-        checkNotFoundWithId(repository.save(meal, userId), meal.id());
+        ValidationUtil.checkNotFoundWithIdAndUserId(repository.save(meal, userId), meal.id(), userId);
     }
 
     public Meal create(Meal meal, int userId) {
