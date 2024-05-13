@@ -3,7 +3,6 @@ package ru.javawebinar.topjava.service.datajpa;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
-import ru.javawebinar.topjava.ActiveDbProfileResolver;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.AbstractMealServiceTest;
@@ -13,7 +12,7 @@ import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.Profiles.DATAJPA;
 import static ru.javawebinar.topjava.UserTestData.*;
 
-@ActiveProfiles(profiles = {DATAJPA},  resolver = ActiveDbProfileResolver.class)
+@ActiveProfiles(profiles = DATAJPA)
 public class DataJpaMealServiceTest extends AbstractMealServiceTest {
     @Test
     public void getWithUser() {
