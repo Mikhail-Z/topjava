@@ -22,6 +22,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.UserTestData.user;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -29,11 +30,11 @@ import static ru.javawebinar.topjava.UserTestData.*;
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-@ActiveProfiles(profiles = {Profiles.REPOSITORY_IMPLEMENTATION}, resolver = ActiveDbProfileResolver.class)
-public class UserServiceTest extends ServiceTest {
+//@ActiveProfiles(profiles = {Profiles.REPOSITORY_IMPLEMENTATION}, resolver = ActiveDbProfileResolver.class)
+public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Autowired
-    private UserService service;
+    protected UserService service;
 
     @Autowired
     private CacheManager cacheManager;

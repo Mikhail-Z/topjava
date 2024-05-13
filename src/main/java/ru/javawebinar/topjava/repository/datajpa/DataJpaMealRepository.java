@@ -1,18 +1,13 @@
 package ru.javawebinar.topjava.repository.datajpa;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static ru.javawebinar.topjava.Profiles.DATAJPA;
-
 @Repository
-@Profile(DATAJPA)
 public class DataJpaMealRepository implements MealRepository {
 
     private final CrudMealRepository crudMealRepository;
@@ -56,5 +51,10 @@ public class DataJpaMealRepository implements MealRepository {
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
         return crudMealRepository.getBetweenHalfOpen(startDateTime, endDateTime, userId);
+    }
+
+    @Override
+    public Meal getWithUser(int mealId, int userId) {
+        return crudMealRepository.getWithUser(mealId, userId);
     }
 }

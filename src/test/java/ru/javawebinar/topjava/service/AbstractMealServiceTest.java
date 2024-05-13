@@ -21,7 +21,7 @@ import java.time.Month;
 import static org.junit.Assert.assertThrows;
 import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javawebinar.topjava.MealTestData.*;
-import static ru.javawebinar.topjava.Profiles.REPOSITORY_IMPLEMENTATION;
+import static ru.javawebinar.topjava.MealTestData.meals;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
@@ -31,12 +31,12 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-@ActiveProfiles(profiles = {REPOSITORY_IMPLEMENTATION}, resolver = ActiveDbProfileResolver.class)
-public class MealServiceTest extends ServiceTest {
+//@ActiveProfiles(profiles = {REPOSITORY_IMPLEMENTATION}, resolver = ActiveDbProfileResolver.class)
+public abstract class AbstractMealServiceTest extends AbstractServiceTest {
     private static final Logger log = getLogger("result");
 
     @Autowired
-    private MealService service;
+    protected MealService service;
 
     @Test
     public void delete() {
