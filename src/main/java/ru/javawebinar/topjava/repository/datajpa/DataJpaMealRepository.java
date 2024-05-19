@@ -29,11 +29,8 @@ public class DataJpaMealRepository implements MealRepository {
             return null;
         }
 
-        var user = crudUserRepository.findById(userId);
-        if (user.isEmpty()) {
-            return null;
-        }
-        meal.setUser(user.get());
+        var user = crudUserRepository.getReferenceById(userId);
+        meal.setUser(user);
         return crudMealRepository.save(meal);
     }
 
