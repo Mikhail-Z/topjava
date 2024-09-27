@@ -6,9 +6,28 @@ import org.springframework.lang.NonNull;
 import ru.javawebinar.topjava.model.AbstractBaseEntity;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
+
 public class ValidationUtil {
 
+    private static final Validator validator;
+
+    static {
+        validator = Validation.buildDefaultValidatorFactory().getValidator();
+    }
+
     private ValidationUtil() {
+    }
+
+    public static <T> T validate(T bean) {
+        var violations = validator.validate(bean);
+        if (violations.isEmpty()) {
+            return bean;
+        }
+
+        throw new ConstraintViolationException(violations);
     }
 
     public static <T> T checkNotFoundWithId(T object, int id) {

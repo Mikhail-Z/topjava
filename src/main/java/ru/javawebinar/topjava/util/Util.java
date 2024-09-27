@@ -3,6 +3,10 @@ package ru.javawebinar.topjava.util;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.lang.Nullable;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+
 public class Util {
 
     private Util() {
@@ -15,5 +19,9 @@ public class Util {
     public static Class<?> getEffectiveClass(Object o) {
         return o instanceof HibernateProxy ?
                 ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+    }
+
+    public static <T> List<T> unique(Collection<T> collection) {
+        return new HashSet<>(collection).stream().toList();
     }
 }
