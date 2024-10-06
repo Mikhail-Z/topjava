@@ -24,12 +24,12 @@ public class MatcherFactory {
         }
 
         public void assertMatch(T actual, T expected) {
-            assertThat(actual).usingRecursiveComparison().ignoringFields(fieldsToIgnore).ignoringCollectionOrderInFields("").isEqualTo(expected);
+            assertThat(actual).usingRecursiveComparison().ignoringFields(fieldsToIgnore).ignoringCollectionOrderInFields(fieldsWithIgnoringOrder).isEqualTo(expected);
         }
 
         @SafeVarargs
         public final void assertMatch(Iterable<T> actual, T... expected) {
-            assertMatch(actual, List.of(expected));
+            assertThat(actual).usingRecursiveComparison().ignoringFields(fieldsToIgnore).ignoringCollectionOrderInFields(fieldsWithIgnoringOrder).ignoringCollectionOrder().isEqualTo(List.of(expected));
         }
 
         public void assertMatch(Iterable<T> actual, Iterable<T> expected) {

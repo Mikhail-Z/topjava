@@ -1,8 +1,11 @@
 package ru.javawebinar.topjava.util;
 
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.lang.Nullable;
+import ru.javawebinar.topjava.model.User;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +25,10 @@ public class Util {
     }
 
     public static <T> List<T> unique(Collection<T> collection) {
-        return new HashSet<>(collection).stream().toList();
+        return new ArrayList<>(new HashSet<>(collection));
+    }
+
+    public static <T> T singleResultOrNull(List<T> results) {
+        return results.isEmpty() ? null : DataAccessUtils.singleResult(results);
     }
 }
