@@ -29,7 +29,7 @@ public class MatcherFactory {
 
         @SafeVarargs
         public final void assertMatch(Iterable<T> actual, T... expected) {
-            assertThat(actual).usingRecursiveComparison().ignoringFields(fieldsToIgnore).ignoringCollectionOrderInFields(fieldsWithIgnoringOrder).ignoringCollectionOrder().isEqualTo(List.of(expected));
+            assertThat(actual).usingRecursiveComparison().ignoringFields(fieldsToIgnore).ignoringCollectionOrderInFields(fieldsWithIgnoringOrder).isEqualTo(List.of(expected));
         }
 
         public void assertMatch(Iterable<T> actual, Iterable<T> expected) {

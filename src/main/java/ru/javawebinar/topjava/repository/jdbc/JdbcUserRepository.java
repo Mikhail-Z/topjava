@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -18,9 +19,6 @@ import ru.javawebinar.topjava.util.ValidationUtil;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-
-import static ru.javawebinar.topjava.util.Util.*;
-import static ru.javawebinar.topjava.util.Util.unique;
 
 @Repository
 public class JdbcUserRepository implements UserRepository {
@@ -91,8 +89,8 @@ public class JdbcUserRepository implements UserRepository {
         var userMap = jdbcTemplate.query("""
                 SELECT * FROM users u INNER JOIN user_role ur on u.id = ur.user_id WHERE id=?
                 """, userWithRolesResultSetExtractor, id);
-        List<User> users = unique(userMap.values());
-        return singleResultOrNull(users);
+        var users = userMap.values();
+        return DataAccessUtils.singleResult(users);
     }
 
     @Override
@@ -100,8 +98,8 @@ public class JdbcUserRepository implements UserRepository {
         var userMap = jdbcTemplate.query("""
                         SELECT u.*, ur.* FROM users u LEFT OUTER JOIN user_role ur ON u.id = ur.user_id WHERE email=?
                 """, userWithRolesResultSetExtractor, email);
-        List<User> users = unique(userMap.values());
-        return singleResultOrNull(users);
+        var users = userMap.values();
+        return DataAccessUtils.singleResult(users);
     }
 
     @Override
@@ -109,25 +107,27 @@ public class JdbcUserRepository implements UserRepository {
         var userMap = jdbcTemplate.query("""
                 SELECT u.*, ur.* FROM users u LEFT OUTER JOIN user_role ur ON u.id = ur.user_id ORDER BY name, email
                 """, userWithRolesResultSetExtractor);
-        return unique(userMap.values());
+        return new ArrayList<>(userMap.values());
     }
 
     private class UserWithRolesResultSetExtractor implements ResultSetExtractor<Map<Integer, User>> {
+        private static final BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<>(User.class);
+
         @Override
         public Map<Integer, User> extractData(ResultSet rs) throws SQLException, DataAccessException {
-            Map<Integer, User> userMap = new HashMap<>();
-            var mapper = new BeanPropertyRowMapper<User>(User.class);
+            Map<Integer, User> userMap = new LinkedHashMap<>();
             while (rs.next()) {
                 var roleStr = rs.getString("role");
-                var user = mapper.mapRow(rs, rs.getRow());
+                var id = rs.getInt("id");
 
-                if (userMap.containsKey(user.id())) {
-                    var oldUser = userMap.get(user.id());
+                if (userMap.containsKey(id)) {
+                    var oldUser = userMap.get(id);
                     var roles = oldUser.getRoles();
                     roles.add(Role.valueOf(roleStr));
                 } else {
+                    var user = mapper.mapRow(rs, rs.getRow());
                     user.setRoles((roleStr != null) ? List.of(Role.valueOf(roleStr)) : Collections.emptyList());
-                    userMap.putIfAbsent(user.id(), user);
+                    userMap.put(id, user);
                 }
             }
             return userMap;

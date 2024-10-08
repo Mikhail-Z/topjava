@@ -25,8 +25,6 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 @RequestMapping("/meals")
 public class JspMealController extends AbstractMealController {
 
-    private static final Logger log = LoggerFactory.getLogger(JspMealController.class);
-
     @PostMapping
     public String createOrUpdate(HttpServletRequest request) throws UnsupportedEncodingException {
         Meal meal = new Meal(
