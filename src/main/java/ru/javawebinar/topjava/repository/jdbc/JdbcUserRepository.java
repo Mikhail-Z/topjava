@@ -29,7 +29,7 @@ public class JdbcUserRepository implements UserRepository {
 
     private final SimpleJdbcInsert insertUser;
 
-    private final UserWithRolesResultSetExtractor userWithRolesResultSetExtractor
+    private static final UserWithRolesResultSetExtractor USER_WITH_ROLES_RESULT_SET_EXTRACTOR
             = new UserWithRolesResultSetExtractor();
 
     @Autowired
@@ -88,7 +88,7 @@ public class JdbcUserRepository implements UserRepository {
     public User get(int id) {
         var userMap = jdbcTemplate.query("""
                 SELECT * FROM users u INNER JOIN user_role ur on u.id = ur.user_id WHERE id=?
-                """, userWithRolesResultSetExtractor, id);
+                """, USER_WITH_ROLES_RESULT_SET_EXTRACTOR, id);
         var users = userMap.values();
         return DataAccessUtils.singleResult(users);
     }
@@ -97,7 +97,7 @@ public class JdbcUserRepository implements UserRepository {
     public User getByEmail(String email) {
         var userMap = jdbcTemplate.query("""
                         SELECT u.*, ur.* FROM users u LEFT OUTER JOIN user_role ur ON u.id = ur.user_id WHERE email=?
-                """, userWithRolesResultSetExtractor, email);
+                """, USER_WITH_ROLES_RESULT_SET_EXTRACTOR, email);
         var users = userMap.values();
         return DataAccessUtils.singleResult(users);
     }
@@ -106,12 +106,12 @@ public class JdbcUserRepository implements UserRepository {
     public List<User> getAll() {
         var userMap = jdbcTemplate.query("""
                 SELECT u.*, ur.* FROM users u LEFT OUTER JOIN user_role ur ON u.id = ur.user_id ORDER BY name, email
-                """, userWithRolesResultSetExtractor);
+                """, USER_WITH_ROLES_RESULT_SET_EXTRACTOR);
         return new ArrayList<>(userMap.values());
     }
 
-    private class UserWithRolesResultSetExtractor implements ResultSetExtractor<Map<Integer, User>> {
-        private static final BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<>(User.class);
+    private static class UserWithRolesResultSetExtractor implements ResultSetExtractor<Map<Integer, User>> {
+        private static final BeanPropertyRowMapper<User> MAPPER = new BeanPropertyRowMapper<>(User.class);
 
         @Override
         public Map<Integer, User> extractData(ResultSet rs) throws SQLException, DataAccessException {
@@ -125,7 +125,7 @@ public class JdbcUserRepository implements UserRepository {
                     var roles = oldUser.getRoles();
                     roles.add(Role.valueOf(roleStr));
                 } else {
-                    var user = mapper.mapRow(rs, rs.getRow());
+                    var user = MAPPER.mapRow(rs, rs.getRow());
                     user.setRoles((roleStr != null) ? List.of(Role.valueOf(roleStr)) : Collections.emptyList());
                     userMap.put(id, user);
                 }
