@@ -10,7 +10,7 @@ import java.util.Locale;
 public class CustomTimeFormatter implements Formatter<LocalTime> {
     @Override
     public LocalTime parse(String text, Locale locale) throws ParseException {
-        return text.isEmpty() ? null : LocalTime.parse(text);
+        return LocalTime.parse(text);
     }
 
     @Override

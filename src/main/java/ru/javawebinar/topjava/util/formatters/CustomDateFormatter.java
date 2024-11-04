@@ -10,7 +10,7 @@ import java.util.Locale;
 public class CustomDateFormatter implements Formatter<LocalDate> {
     @Override
     public LocalDate parse(String text, Locale locale) throws ParseException {
-        return text.isEmpty() ? null : LocalDate.parse(text);
+        return LocalDate.parse(text);
     }
 
     @Override
