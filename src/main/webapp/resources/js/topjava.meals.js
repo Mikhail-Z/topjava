@@ -13,8 +13,9 @@ $("form#filter").submit(function (e) {
     $.ajax({
         type: "GET",
         url: ctx.ajaxUrl + filterUrlSegment,
-        data: queryParams
-    }, updateTable)
+        data: queryParams,
+        success: updateTable
+    })
 })
 
 function disableFilter() {
@@ -22,7 +23,6 @@ function disableFilter() {
     refreshTable()
 }
 
-// $(document).ready(function () {
 $(function () {
     makeEditable(
         $("#datatable").DataTable({
@@ -46,33 +46,11 @@ $(function () {
                     "defaultContent": "Delete",
                     "orderable": false
                 }
-                // {
-                //     "render": function() {return '<a><span class="fa fa-pencil"></span></a>' },
-                //     "orderable": false
-                // },
-                // {
-                //     "render": function(data, type, row, meta) {
-                //         console.log(data)
-                //         console.log(row)
-                //         return `<a onclick=deleteRow(${row.id})><span class="fa fa-remove"></span></a>`
-                //     },
-                //     "orderable": false
-                // }
-                // {
-                //     "data": "id",
-                //     "render": function(data, type, row, meta) {
-                //         console.log(data)
-                //         console.log(row)
-                //         return data
-                //         //return `<span class="fa fa-remove"></span>`
-                //     },
-                //     "orderable": false
-                // }
             ],
             "order": [
                 [
                     0,
-                    "asc"
+                    "desc"
                 ]
             ],
             "createdRow": function (row, data, index) {

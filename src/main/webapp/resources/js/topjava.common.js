@@ -37,7 +37,7 @@ function refreshTable() {
 }
 
 function updateTable(data) {
-    ctx.datatableApi.clear().rows.add(data).draw();
+    + ctx.datatableApi.clear().rows.add(data).draw();
 }
 
 function save() {

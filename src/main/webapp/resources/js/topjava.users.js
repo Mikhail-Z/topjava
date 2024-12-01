@@ -10,7 +10,7 @@ function enable(chkbox, id) {
     //https://stackoverflow.com/a/22213543/548473
     $.ajax({
         url: userAjaxUrl + id,
-        type: "POST",
+        type: "PATCH",
         data: "enabled=" + enabled
     }).done(function () {
         chkbox.closest("tr").attr("user-enabled", enabled);
