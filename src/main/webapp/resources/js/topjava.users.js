@@ -1,4 +1,4 @@
-const userAjaxUrl = "rest/admin/users/";
+const userAjaxUrl = "admin/users/";
 
 // https://stackoverflow.com/a/5064235/548473
 const ctx = {
@@ -10,7 +10,7 @@ function enable(chkbox, id) {
     //https://stackoverflow.com/a/22213543/548473
     $.ajax({
         url: userAjaxUrl + id,
-        type: "PATCH",
+        type: "POST",
         data: "enabled=" + enabled
     }).done(function () {
         chkbox.closest("tr").attr("user-enabled", enabled);
