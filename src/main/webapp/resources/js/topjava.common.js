@@ -23,7 +23,9 @@ function updateRow(id) {
     $("#modalTitle").html(i18n["editTitle"]);
     $.get(ctx.ajaxUrl + id, function (data) {
         $.each(data, function (key, value) {
-            form.find("input[name='" + key + "']").val(value);
+            form.find("input[name='" + key + "']").val(
+                key === "dateTime" ? formatDate(value) : value
+            );
         });
         $('#editRow').modal();
     });
@@ -96,4 +98,12 @@ function failNoty(jqXHR) {
         layout: "bottomRight"
     });
     failedNote.show()
+}
+
+function formatDate(data) {
+    const dateTime = new Date(data);
+    let date = dateTime.toISOString().split('T')[0]
+    let hours = String(dateTime.getHours()).padStart(2, '0')
+    let minutes = String(dateTime.getMinutes()).padStart(2, '0')
+    return `${date} ${hours}:${minutes}`
 }

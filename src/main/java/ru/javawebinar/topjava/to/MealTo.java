@@ -1,21 +1,31 @@
 package ru.javawebinar.topjava.to;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.*;
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import static ru.javawebinar.topjava.util.DateTimeUtil.DATE_TIME_PATTERN;
+
 public class MealTo extends BaseTo {
 
+    @NotNull
+    @DateTimeFormat(pattern = DATE_TIME_PATTERN)
     private final LocalDateTime dateTime;
 
+    @NotBlank
+    @Size(min = 3, max = 200)
     private final String description;
 
-    private final int calories;
+    @Positive
+    private final Integer calories;
 
-    private final boolean excess;
+    private final Boolean excess;
 
     @ConstructorProperties({"id", "dateTime", "description", "calories", "excess"})
-    public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
+    public MealTo(Integer id, LocalDateTime dateTime, String description, Integer calories, Boolean excess) {
         super(id);
         this.dateTime = dateTime;
         this.description = description;
@@ -31,7 +41,7 @@ public class MealTo extends BaseTo {
         return description;
     }
 
-    public int getCalories() {
+    public Integer getCalories() {
         return calories;
     }
 
@@ -44,7 +54,7 @@ public class MealTo extends BaseTo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MealTo mealTo = (MealTo) o;
-        return calories == mealTo.calories &&
+        return Objects.equals(calories, mealTo.calories) &&
                 excess == mealTo.excess &&
                 Objects.equals(id, mealTo.id) &&
                 Objects.equals(dateTime, mealTo.dateTime) &&

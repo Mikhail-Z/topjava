@@ -35,6 +35,7 @@
         <webjars-datetimepicker.version>2.5.20-1</webjars-datetimepicker.version>
         <webjars-noty.version>3.1.4</webjars-noty.version>
         <webjars-datatables.version>1.13.5</webjars-datatables.version>
+        <webjars-momentjs.version>2.30.1</webjars-momentjs.version>
 
         <!-- Logging -->
         <logback.version>1.5.3</logback.version>
@@ -278,6 +279,11 @@
             <groupId>org.webjars.bower</groupId>
             <artifactId>noty</artifactId>
             <version>${webjars-noty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>momentjs</artifactId>
+            <version>${webjars-momentjs.version}</version>
         </dependency>
 
         <!--JSON-->
