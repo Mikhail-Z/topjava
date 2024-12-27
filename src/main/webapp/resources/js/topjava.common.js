@@ -101,9 +101,5 @@ function failNoty(jqXHR) {
 }
 
 function formatDate(data) {
-    const dateTime = new Date(data);
-    let date = dateTime.toISOString().split('T')[0]
-    let hours = String(dateTime.getHours()).padStart(2, '0')
-    let minutes = String(dateTime.getMinutes()).padStart(2, '0')
-    return `${date} ${hours}:${minutes}`
+    return data.replace('T', ' ').substring(0, 16)
 }
