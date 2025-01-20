@@ -10,10 +10,11 @@ import ru.javawebinar.topjava.util.UsersUtil;
 
 import java.util.List;
 
-import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
-import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
+import static ru.javawebinar.topjava.util.ValidationUtil.*;
 
 public abstract class AbstractUserController {
+    public static final String ERROR_DUPLICATE_EMAIL_CODE = "error.user.duplicateEmail";
+
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -49,6 +50,7 @@ public abstract class AbstractUserController {
     public void update(User user, int id) {
         log.info("update {} with id={}", user, id);
         assureIdConsistent(user, id);
+        //checkFound(service.getByEmail(user.getEmail()), "User with email=" + user.getEmail() + " already exists");
         service.update(user);
     }
 

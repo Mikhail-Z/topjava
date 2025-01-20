@@ -17,6 +17,8 @@ import ru.javawebinar.topjava.Profiles;
 
 import javax.annotation.PostConstruct;
 
+import java.util.Locale;
+
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 

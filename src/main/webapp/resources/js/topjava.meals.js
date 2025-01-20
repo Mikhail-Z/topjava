@@ -1,5 +1,7 @@
 const mealAjaxUrl = "profile/meals/";
 
+ $.datetimepicker.setLocale(localeCode);
+
 // https://stackoverflow.com/a/5064235/548473
 const ctx = {
     ajaxUrl: mealAjaxUrl,
