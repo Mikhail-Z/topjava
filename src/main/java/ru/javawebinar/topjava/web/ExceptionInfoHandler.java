@@ -32,10 +32,10 @@ import static ru.javawebinar.topjava.util.exception.ErrorType.*;
 public class ExceptionInfoHandler {
     public static final String DUPLICATE_EMAIL_ERROR_CODE = "error.user.duplicateEmail";
     public static final String DUPLICATE_DATETIME_ERROR_CODE = "error.meal.duplicateDateTime";
-    public static final String DEFAULT_VALIDATION_ERROR_CODE = "error.meal.defaultValidationError";
+    public static final String DEFAULT_DATA_ERROR_CODE = "error.meal.defaultDataError";
 
     private static final Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
-    private static final Map<String, String> DB_VALIDATION_CONSTRAINTS_TO_ERROR_CODES = Map.of(
+    private static final Map<String, String> DB_CONSTRAINTS_TO_ERROR_CODES = Map.of(
             "users_unique_email_idx", DUPLICATE_EMAIL_ERROR_CODE,
             "meal_unique_user_datetime_idx", DUPLICATE_DATETIME_ERROR_CODE
     );
@@ -57,13 +57,14 @@ public class ExceptionInfoHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
         String rootMsg = ValidationUtil.getRootCause(e).getMessage();
-        String messageCode = DB_VALIDATION_CONSTRAINTS_TO_ERROR_CODES.entrySet()
+        String messageCode = DB_CONSTRAINTS_TO_ERROR_CODES.entrySet()
                 .stream()
                 .filter(entry -> rootMsg.toLowerCase().contains(entry.getKey()))
                 .findFirst()
                 .map(Map.Entry::getValue)
-                .orElse(DEFAULT_VALIDATION_ERROR_CODE);
-        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, messageSourceAccessor.getMessage(messageCode));
+                .orElse(DEFAULT_DATA_ERROR_CODE);
+        ErrorType errorType = messageCode.equals(DEFAULT_DATA_ERROR_CODE) ? DATA_ERROR : VALIDATION_ERROR;
+        return logAndGetErrorInfo(req, e, false, errorType, messageSourceAccessor.getMessage(messageCode));
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)  // 422

@@ -16,14 +16,6 @@ import java.util.List;
 @RequestMapping(value = "/admin/users", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminUIController extends AbstractUserController {
 
-    @Autowired
-    private MessageSource messageSource;
-
-    public AdminUIController(ReloadableResourceBundleMessageSource messageSource) {
-        super();
-        this.messageSource = messageSource;
-    }
-
     @Override
     @GetMapping
     public List<User> getAll() {

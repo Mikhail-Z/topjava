@@ -50,7 +50,6 @@ public abstract class AbstractUserController {
     public void update(User user, int id) {
         log.info("update {} with id={}", user, id);
         assureIdConsistent(user, id);
-        //checkFound(service.getByEmail(user.getEmail()), "User with email=" + user.getEmail() + " already exists");
         service.update(user);
     }
 

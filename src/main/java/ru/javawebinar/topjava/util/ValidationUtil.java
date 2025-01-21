@@ -75,6 +75,6 @@ public class ValidationUtil {
     }
 
     public static String getMessage(Throwable t) {
-        return t.getLocalizedMessage() != null ? t.getLocalizedMessage() : t.getMessage();
+        return t.getLocalizedMessage() != null ? t.getLocalizedMessage() : t.getClass().getSimpleName();
     }
 }
